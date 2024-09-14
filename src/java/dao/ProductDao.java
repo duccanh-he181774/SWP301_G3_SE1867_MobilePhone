@@ -19,12 +19,19 @@ public class ProductDao {
     private DBContext dbContext = new DBContext();
 
     public boolean addProduct(Product product) throws Exception {
-        String sql = "INSERT INTO products (name, price, description) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO Product (ProductName, ProductDetails, ProductImage, CategoryID, Price, StockQuantity, CreatedDate, UpdatedDate, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = dbContext.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, product.getName());
-            pstmt.setDouble(2, product.getPrice());
-            pstmt.setString(3, product.getDescription());
+            pstmt.setString(2, product.getProductDetails());
+            pstmt.setString(3, product.getProductImage());
+            pstmt.setInt(4, product.getCategoryID());
+            pstmt.setDouble(5, product.getPrice());
+            pstmt.setInt(6, product.getStockQuantity());
+            pstmt.setDate(7, new java.sql.Date(product.getCreatedDate().getTime()));
+            pstmt.setDate(8, new java.sql.Date(product.getUpdatedDate().getTime()));
+            pstmt.setString(9, product.getStatus());
+            pstmt.setInt(10, product.getId());
             pstmt.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -34,47 +41,26 @@ public class ProductDao {
     }
 
     public List<Product> getAllProducts() throws Exception {
+        String sql = "SELECT * FROM Product";
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM products";
         try (Connection conn = dbContext.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
-                products.add(new Product(rs.getInt("id"), rs.getString("name"), rs.getDouble("price"), rs.getString("description")));
+                Product product = new Product();
+                product.setId(rs.getInt("ProductID"));
+                product.setName(rs.getString("ProductName"));
+                product.setProductDetails(rs.getString("ProductDetails"));
+                product.setProductImage(rs.getString("ProductImage"));
+                product.setCategoryID(rs.getInt("CategoryID"));
+                product.setPrice(rs.getDouble("Price"));
+                product.setStockQuantity(rs.getInt("StockQuantity"));
+                product.setCreatedDate(rs.getDate("CreatedDate"));
+                product.setUpdatedDate(rs.getDate("UpdatedDate"));
+                product.setStatus(rs.getString("Status"));
+                products.add(product);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return products;
     }
-
-    public boolean updateProduct(Product product) throws Exception {
-        String sql = "UPDATE products SET name = ?, price = ?, description = ? WHERE id = ?";
-        try (Connection conn = dbContext.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, product.getName());
-            pstmt.setDouble(2, product.getPrice());
-            pstmt.setString(3, product.getDescription());
-            pstmt.setInt(4, product.getId());
-            pstmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean deleteProduct(int id) throws Exception {
-        String sql = "DELETE FROM products WHERE id = ?";
-        try (Connection conn = dbContext.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }
-
