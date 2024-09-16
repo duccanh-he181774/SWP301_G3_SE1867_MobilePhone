@@ -7,17 +7,21 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+
+import dao.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.UserWithRole;
 
 /**
  *
  * @author LENOVO
  */
 public class manageUser extends HttpServlet {
-   
+    private UserDAO userDAO = new UserDAO();
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -53,7 +57,15 @@ public class manageUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            List<UserWithRole> usersWithRoles = userDAO.getUsersWithRoles();
+            request.setAttribute("usersWithRoles", usersWithRoles);
+            request.getRequestDispatcher("/userList.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while retrieving user data.");
+        }
+    }
     } 
 
     /** 
