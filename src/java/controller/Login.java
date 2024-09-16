@@ -17,8 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author ADMIN
  */
-@WebServlet(name="huy", urlPatterns={"/huy"})
-public class huy extends HttpServlet {
+@WebServlet(name="Login", urlPatterns={"/login"})
+public class Login extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -35,10 +35,10 @@ public class huy extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet huy</title>");  
+            out.println("<title>Servlet Login</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet huy at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet Login at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
