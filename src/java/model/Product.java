@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -12,62 +13,83 @@ import java.util.Date;
  */
 
 public class Product {
-    private int id;
-    private String name;
+    private int productID;
+    private String productName;
+    private String productDetails;
+    private String productImage;
+    private int categoryID;
     private double price;
-    private String description;
-    private String imageUrl;
-    private int categoryId;
-    private int stock;
-    private Date dateAdded;
-    private Date dateUpdated;
+    private int stockQuantity;
+    private Timestamp createdDate; 
+    private Timestamp updatedDate; 
     private String status;
 
-    // Default Constructor
-    public Product() {}
+    // Default constructor
+    public Product() {
+    }
 
-    // Constructor without ID (for insert operations)
-    public Product(String name, String description, String imageUrl, int categoryId, double price, int stock, Date dateAdded, Date dateUpdated, String status) {
-        this.name = name;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.categoryId = categoryId;
+    // Constructor for inserting a new product (without ID, CreatedDate, UpdatedDate)
+    public Product(String productName, String productDetails, String productImage, int categoryID, double price, int stockQuantity, String status) {
+        this.productName = productName;
+        this.productDetails = productDetails;
+        this.productImage = productImage;
+        this.categoryID = categoryID;
         this.price = price;
-        this.stock = stock;
-        this.dateAdded = dateAdded;
-        this.dateUpdated = dateUpdated;
+        this.stockQuantity = stockQuantity;
         this.status = status;
     }
 
-    // Constructor with ID (for update operations)
-    public Product(int id, String name, double price, String description, String imageUrl, int categoryId, int stock, Date dateAdded, Date dateUpdated, String status) {
-        this.id = id;
-        this.name = name;
+    // Constructor for updating a product (with ID)
+    public Product(int productID, String productName, String productDetails, String productImage, int categoryID, double price, int stockQuantity, String status) {
+        this.productID = productID;
+        this.productName = productName;
+        this.productDetails = productDetails;
+        this.productImage = productImage;
+        this.categoryID = categoryID;
         this.price = price;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.categoryId = categoryId;
-        this.stock = stock;
-        this.dateAdded = dateAdded;
-        this.dateUpdated = dateUpdated;
+        this.stockQuantity = stockQuantity;
         this.status = status;
     }
 
-    // Getters and Setters
-    public int getId() {
-        return id;
+    // Getters and setters for all fields
+    public int getProductID() {
+        return productID;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
 
-    public String getName() {
-        return name;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductDetails() {
+        return productDetails;
+    }
+
+    public void setProductDetails(String productDetails) {
+        this.productDetails = productDetails;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
+
+    public int getCategoryID() {
+        return categoryID;
+    }
+
+    public void setCategoryID(int categoryID) {
+        this.categoryID = categoryID;
     }
 
     public double getPrice() {
@@ -78,52 +100,28 @@ public class Product {
         this.price = price;
     }
 
-    public String getDescription() {
-        return description;
+    public int getStockQuantity() {
+        return stockQuantity;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = (Timestamp) createdDate;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public Date getUpdatedDate() {
+        return updatedDate;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
-    }
-
-    public Date getDateAdded() {
-        return dateAdded;
-    }
-
-    public void setDateAdded(Date dateAdded) {
-        this.dateAdded = dateAdded;
-    }
-
-    public Date getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(Date dateUpdated) {
-        this.dateUpdated = dateUpdated;
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = (Timestamp) updatedDate;
     }
 
     public String getStatus() {
@@ -134,3 +132,4 @@ public class Product {
         this.status = status;
     }
 }
+

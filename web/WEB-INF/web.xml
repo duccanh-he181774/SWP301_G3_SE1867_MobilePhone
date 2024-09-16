@@ -8,6 +8,10 @@
         <servlet-name>manage</servlet-name>
         <servlet-class>controller.manage</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProductController</servlet-name>
+        <servlet-class>controller.ProductController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DBContext</servlet-name>
         <url-pattern>/DBContext</url-pattern>
@@ -15,5 +19,9 @@
     <servlet-mapping>
         <servlet-name>manage</servlet-name>
         <url-pattern>/manage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductController</servlet-name>
+        <url-pattern>/manage-product</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -12,9 +12,10 @@ public class DBContext {
         return DriverManager.getConnection(url, userID, password);
     }
     
-    private final String serverName = "localhost";
-    private final String dbName = "MobileShop";
-    private final String portNumber = "1433";
-    private final String userID = "sa";
-    private final String password = "1";
+    private final String serverName = System.getenv("DB_SERVER") != null ? System.getenv("DB_SERVER") : "localhost";
+    private final String dbName = System.getenv("DB_NAME") != null ? System.getenv("DB_NAME") : "MobileShop";
+    private final String portNumber = System.getenv("DB_PORT") != null ? System.getenv("DB_PORT") : "1433";
+    private final String userID = System.getenv("DB_USER") != null ? System.getenv("DB_USER") : "sa";
+    private final String password = System.getenv("DB_PASSWORD") != null ? System.getenv("DB_PASSWORD") : "1";
+
 }
