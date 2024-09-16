@@ -7,21 +7,19 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
-
-import dao.UserDAO;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.UserWithRole;
 
 /**
  *
- * @author LENOVO
+ * @author ADMIN
  */
-public class manageUser extends HttpServlet {
-    private UserDAO userDAO = new UserDAO();
+@WebServlet(name="huy", urlPatterns={"/huy"})
+public class huy extends HttpServlet {
+   
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -37,10 +35,10 @@ public class manageUser extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet manageUser</title>");  
+            out.println("<title>Servlet huy</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet manageUser at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet huy at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -57,15 +55,7 @@ public class manageUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        try {
-            List<UserWithRole> usersWithRoles = userDAO.getUsersWithRoles();
-            request.setAttribute("usersWithRoles", usersWithRoles);
-            request.getRequestDispatcher("/userList.jsp").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while retrieving user data.");
-        }
-    }
+        processRequest(request, response);
     } 
 
     /** 

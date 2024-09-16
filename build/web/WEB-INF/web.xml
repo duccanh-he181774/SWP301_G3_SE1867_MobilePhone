@@ -5,15 +5,15 @@
         <servlet-class>dal.DBContext</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>manageUser</servlet-name>
-        <servlet-class>controller.manageUser</servlet-class>
+        <servlet-name>manage</servlet-name>
+        <servlet-class>controller.manage</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DBContext</servlet-name>
         <url-pattern>/DBContext</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>manageUser</servlet-name>
-        <url-pattern>/manageUser</url-pattern>
+        <servlet-name>manage</servlet-name>
+        <url-pattern>/manage</url-pattern>
     </servlet-mapping>
 </web-app>
