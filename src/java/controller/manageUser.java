@@ -5,18 +5,24 @@
 
 package controller;
 
+import dao.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.SQLException;
+import java.util.List;
+import com.google.gson.Gson;
+import model.UserWithRole;
 
 /**
  *
- * @author ADMIN
+ * @author LENOVO
  */
-public class manage extends HttpServlet {
+public class manageUser extends HttpServlet {
+    private UserDAO userDAO = new UserDAO();
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -33,10 +39,10 @@ public class manage extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet manage</title>");  
+            out.println("<title>Servlet manageUser</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet manage at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet manageUser at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -53,7 +59,20 @@ public class manage extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        response.setContentType("application/json;charset=UTF-8");
+        
+        try (PrintWriter out = response.getWriter()) {
+            List<UserWithRole> usersWithRoles = userDAO.getUsersWithRoles();
+            // Convert the list of users to JSON
+            Gson gson = new Gson();
+            String json = gson.toJson(usersWithRoles);
+            
+            out.print(json);
+            out.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while fetching user data.");
+        }
     } 
 
     /** 

@@ -70,7 +70,7 @@ public class UserDAO {
     public static void main(String[] args) throws Exception {
         UserDAO dao = new UserDAO();
         
-        System.out.println(dao.getAllUsers());
+        System.out.println(dao.getUsersWithRoles());
     }
     
     
