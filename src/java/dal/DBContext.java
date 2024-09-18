@@ -16,6 +16,6 @@ public class DBContext {
     private final String dbName = System.getenv("DB_NAME") != null ? System.getenv("DB_NAME") : "MobileShop";
     private final String portNumber = System.getenv("DB_PORT") != null ? System.getenv("DB_PORT") : "1433";
     private final String userID = System.getenv("DB_USER") != null ? System.getenv("DB_USER") : "sa";
-    private final String password = System.getenv("DB_PASSWORD") != null ? System.getenv("DB_PASSWORD") : "1";
+    private final String password = System.getenv("DB_PASSWORD") != null ? System.getenv("DB_PASSWORD") : "123";
 
 }
