@@ -5,7 +5,7 @@
 package model;
 
 import java.sql.Timestamp;
-import java.util.Date;
+import java.math.BigDecimal;
 
 /**
  *
@@ -13,51 +13,52 @@ import java.util.Date;
  */
 
 public class Product {
-    private int productID;
-    private String productName;
-    private String productDetails;
-    private String productImage;
-    private int categoryID;
-    private double price;
-    private int stockQuantity;
-    private Timestamp createdDate; 
-    private Timestamp updatedDate; 
-    private String status;
+
+    private int productId;        
+    private String productName;    
+    private String productDetails; 
+    private String productImage;     
+    private Integer categoryID;    
+    private BigDecimal price;        
+    private int stockQuantity;       
+    private Timestamp createdDate;    
+    private Timestamp updatedDate;   
+    private String status;          
 
     // Default constructor
     public Product() {
     }
 
-    // Constructor for inserting a new product (without ID, CreatedDate, UpdatedDate)
-    public Product(String productName, String productDetails, String productImage, int categoryID, double price, int stockQuantity, String status) {
+    // Constructor for creating a new product (without ID, createdDate, updatedDate)
+    public Product(String productName, String productDetails, String productImage, Integer categoryID, BigDecimal price, int stockQuantity, String status) {
         this.productName = productName;
         this.productDetails = productDetails;
         this.productImage = productImage;
-        this.categoryID = categoryID;
+        this.categoryID = categoryID;  // This field now supports null
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.status = status;
     }
 
-    // Constructor for updating a product (with ID)
-    public Product(int productID, String productName, String productDetails, String productImage, int categoryID, double price, int stockQuantity, String status) {
-        this.productID = productID;
+    // Constructor for updating an existing product (with ID)
+    public Product(int productId, String productName, String productDetails, String productImage, Integer categoryID, BigDecimal price, int stockQuantity, String status) {
+        this.productId = productId;
         this.productName = productName;
         this.productDetails = productDetails;
         this.productImage = productImage;
-        this.categoryID = categoryID;
+        this.categoryID = categoryID;  // This field now supports null
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.status = status;
     }
 
     // Getters and setters for all fields
-    public int getProductID() {
-        return productID;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setProductID(int productID) {
-        this.productID = productID;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public String getProductName() {
@@ -84,19 +85,19 @@ public class Product {
         this.productImage = productImage;
     }
 
-    public int getCategoryID() {
+    public Integer getCategoryID() {  // This field now supports null
         return categoryID;
     }
 
-    public void setCategoryID(int categoryID) {
+    public void setCategoryID(Integer categoryID) {  // This field now supports null
         this.categoryID = categoryID;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -108,20 +109,20 @@ public class Product {
         this.stockQuantity = stockQuantity;
     }
 
-    public Date getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = (Timestamp) createdDate;
+    public void setCreatedDate(Timestamp createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public Date getUpdatedDate() {
+    public Timestamp getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = (Timestamp) updatedDate;
+    public void setUpdatedDate(Timestamp updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
     public String getStatus() {
@@ -132,4 +133,3 @@ public class Product {
         this.status = status;
     }
 }
-
