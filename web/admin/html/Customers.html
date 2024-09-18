@@ -155,17 +155,38 @@
                                             <th>Registration Date</th>
                                             <th>Address</th>
                                             <th>Role Name</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <!-- Data will be dynamically inserted here -->
                                     </tbody>
                                 </table>
-
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!-- Modal Structure -->
+        <div id="editUserModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); color:white; text-align:center; padding:20px;">
+            <div style="background:white; color:black; margin:auto; padding:20px; border-radius:5px; width:50%;">
+                <h2>Edit User</h2>
+                <form id="editUserForm">
+                    <input type="hidden" id="userID" name="userID">
+                    <label for="userName">User Name:</label>
+                    <input type="text" id="userName" name="userName" required><br><br>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required><br><br>
+                    <label for="registrationDate">Registration Date:</label>
+                    <input type="text" id="registrationDate" name="registrationDate" required><br><br>
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" name="address" required><br><br>
+                    <label for="roleName">Role Name:</label>
+                    <input type="text" id="roleName" name="roleName" required><br><br>
+                    <button type="submit">Save</button>
+                    <button type="button" onclick="closeModal()">Cancel</button>
+                </form>
             </div>
         </div>
         <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
@@ -174,32 +195,139 @@
         <script src="../assets/js/app.min.js"></script>
         <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
         <script>
-            // Function to fetch user data from the servlet and populate the table
-            function loadUserData() {
-                fetch('/MobilePhone/manageUser')
-                        .then(response => response.json())
-                        .then(data => {
-                            const tableBody = document.querySelector('#userTable tbody');
-                            tableBody.innerHTML = ''; // Clear existing rows
+                        function loadUserTable() {
+                            fetch('/MobilePhone/manageUser')
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error('Network response was not ok.');
+                                        }
+                                        return response.json();
+                                    })
+                                    .then(data => {
+                                        const tableBody = document.querySelector('#userTable tbody');
+                                        tableBody.innerHTML = ''; // Clear existing rows
 
-                            data.forEach(user => {
-                                const row = document.createElement('tr');
-                                row.innerHTML = `
-                            <td>${user.userID}</td>
-                            <td>${user.userName}</td>
-                            <td>${user.email}</td>
-                            <td>${new Date(user.registrationDate).toLocaleString()}</td>
-                            <td>${user.address}</td>
-                            <td>${user.roleName}</td>
-                        `;
-                                tableBody.appendChild(row);
-                            });
-                        })
-                        .catch(error => console.error('Error fetching user data:', error));
-            }
+                                        data.forEach(user => {
+                                            const row = document.createElement('tr');
+                                            row.innerHTML = `
+                    <td>${user.userID}</td>
+                    <td>${user.userName}</td>
+                    <td>${user.email}</td>
+                    <td>${user.registrationDate}</td>
+                    <td>${user.address}</td>
+                    <td>${user.roleName}</td>
+                    <td>
+                        <button onclick="viewUser(${user.userID})">View</button>
+                        <button onclick="openModal(${user.userID})">Edit</button>
+                        <button onclick="deleteUser(${user.userID})">Delete</button>
+                    </td>
+                `;
+                                            tableBody.appendChild(row);
+                                        });
+                                    })
+                                    .catch(error => console.error('Error fetching user data:', error));
+                        }
 
-            // Load user data when the page loads
-            window.onload = loadUserData;
+// Function to view user details
+                        function viewUser(userID) {
+                            fetch(`/MobilePhone/manageUser?action=view&userId=${userID}`)
+                                    .then(response => response.json())
+                                    .then(user => {
+                                        alert(`User Details:\nUser ID: ${user.userID}\nUser Name: ${user.userName}\nEmail: ${user.email}\nRegistration Date: ${user.registrationDate}\nAddress: ${user.address}\nRole Name: ${user.roleName}`);
+                                    })
+                                    .catch(error => console.error('Error fetching user details:', error));
+                        }
+
+// Function to edit user
+                        function editUser(userID) {
+                            const userName = prompt('Enter new User Name:');
+                            const email = prompt('Enter new Email:');
+                            const registrationDate = prompt('Enter new Registration Date (YYYY-MM-DD HH:MM:SS):');
+                            const address = prompt('Enter new Address:');
+                            const roleName = prompt('Enter new Role Name:');
+
+                            if (userName && email && registrationDate && address && roleName) {
+                                fetch('/manageUser', {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                                    body: `userId=${userID}&userName=${userName}&email=${email}&registrationDate=${registrationDate}&address=${address}&roleName=${roleName}`
+                                })
+                                        .then(response => response.json())
+                                        .then(result => {
+                                            if (result.status === 'success') {
+                                                loadUserTable(); // Reload the table to reflect changes
+                                            } else {
+                                                alert('Failed to update user.');
+                                            }
+                                        })
+                                        .catch(error => console.error('Error updating user:', error));
+                            }
+                        }
+
+// Function to delete user
+                        function deleteUser(userID) {
+                            if (confirm('Are you sure you want to delete this user?')) {
+                                fetch(`/MobilePhone/manageUser?userId=${userID}`, {method: 'DELETE'})
+                                        .then(response => response.json())
+                                        .then(result => {
+                                            if (result.status === 'success') {
+                                                loadUserTable(); // Reload the table to reflect changes
+                                            } else {
+                                                alert('Failed to delete user.');
+                                            }
+                                        })
+                                        .catch(error => console.error('Error deleting user:', error));
+                            }
+                        }
+                        function openModal(userID) {
+                            fetch(`/MobilePhone/manageUser?action=view&userId=${userID}`)
+                                    .then(response => response.json())
+                                    .then(user => {
+                                        document.getElementById('userID').value = user.userID;
+                                        document.getElementById('userName').value = user.userName;
+                                        document.getElementById('email').value = user.email;
+                                        document.getElementById('registrationDate').value = user.registrationDate;
+                                        document.getElementById('address').value = user.address;
+                                        document.getElementById('roleName').value = user.roleName;
+                                        document.getElementById('editUserModal').style.display = 'block';
+                                    })
+                                    .catch(error => console.error('Error fetching user data:', error));
+                        }
+
+
+
+// Function to close the modal
+                        function closeModal() {
+                            document.getElementById('editUserModal').style.display = 'none';
+                        }
+
+// Handle form submission
+                        document.getElementById('editUserForm').addEventListener('submit', function (event) {
+                            event.preventDefault();
+                            const formData = new FormData(this); // this ở đây phải là đối tượng HTMLFormElement
+                            const requestBody = new URLSearchParams(formData).toString();
+                            console.log('Request Body:', requestBody); // In nội dung gửi đi ra console
+
+                            fetch('/MobilePhone/manageUser', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                                body: requestBody
+                            })
+                                    .then(response => response.json())
+                                    .then(result => {
+                                        if (result.status === 'success') {
+                                            alert('User updated successfully!');
+                                            closeModal();
+                                            loadUserTable(); // Reload the table to reflect changes
+                                        } else {
+                                            alert('Failed to update user.');
+                                        }
+                                    })
+                                    .catch(error => console.error('Error updating user:', error));
+                        });
+
+// Initial load of the user table
+                        document.addEventListener('DOMContentLoaded', loadUserTable);
         </script>
     </body>
 
