@@ -21,7 +21,7 @@ public class ProductDao {
     private DBContext dbContext = new DBContext();
 
     // Add product to the database
-    public void addProduct(Product product) throws SQLException {
+    public void addProduct(Product product) throws SQLException, Exception {
         String sql = "INSERT INTO Product (ProductName, ProductDetails, ProductImage, CategoryID, Price, StockQuantity, CreatedDate, UpdatedDate, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = dbContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -44,7 +44,7 @@ public class ProductDao {
     }
 
     // Fetch all products from the database
-    public List<Product> getAllProducts() throws SQLException {
+    public List<Product> getAllProducts() throws SQLException, Exception {
         List<Product> products = new ArrayList<>();
         String sql = "SELECT * FROM Product";
         try (Connection connection = dbContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
