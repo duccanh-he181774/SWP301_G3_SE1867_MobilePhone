@@ -9,19 +9,19 @@ public class UserWithRole {
     private String email;
     private Date registrationDate;
     private String address;
-    private String role;
+    private String roleName;
 
     // Constructors
     public UserWithRole() {
     }
 
-    public UserWithRole(int userID, String userName, String email, Date registrationDate, String address, String role) {
+    public UserWithRole(int userID, String userName, String email, Date registrationDate, String address, String roleName) {
         this.userID = userID;
         this.userName = userName;
         this.email = email;
         this.registrationDate = registrationDate;
         this.address = address;
-        this.role = role;
+        this.roleName = roleName;
     }
 
     // Getters and Setters
@@ -65,11 +65,18 @@ public class UserWithRole {
         this.address = address;
     }
 
-    public String getRole() {
-        return role;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoleName(String role) {
+        this.roleName = roleName;
     }
+
+    @Override
+    public String toString() {
+        return "UserWithRole{" + "userID=" + userID + ", userName=" + userName + ", email=" + email + ", registrationDate=" + registrationDate + ", address=" + address + ", role=" + roleName + '}';
+    }
+    
+    
 }
