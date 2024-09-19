@@ -12,10 +12,6 @@
         <servlet-name>ProductController</servlet-name>
         <servlet-class>controller.ProductController</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>manageUser</servlet-name>
-        <servlet-class>controller.manageUser</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>DBContext</servlet-name>
         <url-pattern>/DBContext</url-pattern>
@@ -28,10 +24,4 @@
         <servlet-name>ProductController</servlet-name>
         <url-pattern>/manage-product</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>manageUser</servlet-name>
-        <url-pattern>/manageUser</url-pattern>
-    </servlet-mapping>
-    
-
 </web-app>

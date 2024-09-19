@@ -12,57 +12,12 @@ import dal.DBContext;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import model.User;
 import model.UserWithRole;
 
 public class UserDAO {
 
     private DBContext dbContext = new DBContext();
-    
-    public boolean updateUser(UserWithRole user) throws SQLException, Exception {
-    String sql = "UPDATE Users SET UserName = ?, Email = ?, RegistrationDate = ?, Address = ? WHERE UserID = ?";
-    try (Connection connection = dbContext.getConnection();
-         PreparedStatement statement = connection.prepareStatement(sql)) {
-        
-        statement.setString(1, user.getUserName());
-        statement.setString(2, user.getEmail());
-        statement.setTimestamp(3, (Timestamp) user.getRegistrationDate());
-        statement.setString(4, user.getAddress());
-        statement.setInt(5, user.getUserID());
-        
-        int rowsUpdated = statement.executeUpdate();
-        return rowsUpdated > 0;
-    }
-}
-    
-    public UserWithRole getUserById(int userId) throws SQLException, Exception {
-    String sql = "SELECT u.UserID, u.UserName, u.Email, u.RegistrationDate, u.Address, r.RoleName " +
-                 "FROM Users u " +
-                 "LEFT JOIN UserRoles ur ON u.UserID = ur.UserID " +
-                 "LEFT JOIN Roles r ON ur.RoleID = r.RoleID " +
-                 "WHERE u.UserID = ?";
-    try (Connection connection = dbContext.getConnection();
-         PreparedStatement statement = connection.prepareStatement(sql)) {
-        
-        statement.setInt(1, userId);
-        try (ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                return new UserWithRole(
-                    resultSet.getInt("UserID"),
-                    resultSet.getString("UserName"),
-                    resultSet.getString("Email"),
-                    resultSet.getTimestamp("RegistrationDate"),
-                    resultSet.getString("Address"),
-                    resultSet.getString("RoleName")
-                );
-            }
-        }
-    }
-    return null; // Trả về null nếu không tìm thấy người dùng
-}
-
-
 
     public List<User> getAllUsers() throws SQLException, Exception {
         List<User> users = new ArrayList<>();
@@ -107,17 +62,23 @@ public class UserDAO {
         }
         return usersWithRoles;
     }
-    
-    public boolean deleteUser(int userId) throws SQLException, Exception {
-    String sql = "DELETE FROM Users WHERE UserID = ?";
-    try (Connection connection = dbContext.getConnection();
-         PreparedStatement statement = connection.prepareStatement(sql)) {
-        
-        statement.setInt(1, userId);
-        int rowsDeleted = statement.executeUpdate();
-        return rowsDeleted > 0;
-    }
-}
 
+    public static void main(String[] args) throws Exception {
+        UserDAO dao = new UserDAO();
+
+        System.out.println(dao.getAllUsers());
+    }
+
+    public UserWithRole getUserById(int userId) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public boolean deleteUser(int userId) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public boolean updateUser(UserWithRole user) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
 }
