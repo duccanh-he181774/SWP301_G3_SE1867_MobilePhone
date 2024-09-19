@@ -1,5 +1,6 @@
 package controller;
 
+import com.google.gson.Gson;
 import dao.ProductDao;
 import model.Product;
 
@@ -19,11 +20,11 @@ import java.util.logging.Logger;
  *
  * @author ADMIN
  */
-
 @WebServlet("/MobilePhone/manage-product")
 public class ProductController extends HttpServlet {
 
     private ProductDao productDao = new ProductDao();
+    private Gson gson = new Gson();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,6 +59,20 @@ public class ProductController extends HttpServlet {
                 Logger.getLogger(ProductController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
+        if ("getProduct".equals(action)) {
+            int productId = Integer.parseInt(request.getParameter("productId"));
+            try {
+                Product product = productDao.getProductById(productId);
+                String json = gson.toJson(product);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(json);
+            } catch (SQLException e) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().write("Error retrieving product: " + e.getMessage());
+            }
+        }
     }
 
     @Override
@@ -69,40 +84,53 @@ public class ProductController extends HttpServlet {
             String productName = request.getParameter("productName");
             String productDescription = request.getParameter("productDescription");
             String productImage = request.getParameter("imageUrl");
-
-            // CategoryID handling
-            Integer categoryID = null;
-            String categoryIDParam = request.getParameter("categoryId");
-            if (categoryIDParam != null && !categoryIDParam.isEmpty()) {
-                try {
-                    categoryID = Integer.parseInt(categoryIDParam);
-                } catch (NumberFormatException e) {
-                    response.getWriter().println("Invalid Category ID.");
-                    return;
-                }
-            }
-
-            // Validate price
-            BigDecimal price;
-            try {
-                price = new BigDecimal(request.getParameter("productPrice"));
-            } catch (NumberFormatException e) {
-                response.getWriter().println("Invalid price format.");
-                return;
-            }
-
+            BigDecimal price = new BigDecimal(request.getParameter("productPrice"));
+            Integer categoryId = request.getParameter("categoryId").isEmpty() ? null : Integer.parseInt(request.getParameter("categoryId"));
             int stockQuantity = Integer.parseInt(request.getParameter("productStock"));
             String status = request.getParameter("productStatus");
 
-            // Create product object and save it
-            Product product = new Product(productName, productDescription, productImage, categoryID, price, stockQuantity, status);
+            // Create new product object
+            Product newProduct = new Product(productName, productDescription, productImage, categoryId, price, stockQuantity, status);
+
             try {
-                productDao.addProduct(product);
+                productDao.addProduct(newProduct);
                 response.getWriter().println("Product added successfully.");
             } catch (SQLException e) {
                 response.getWriter().println("Error adding product: " + e.getMessage());
             } catch (Exception ex) {
                 Logger.getLogger(ProductController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if ("update".equals(action)) {
+            // Get parameters from request
+            int productId = Integer.parseInt(request.getParameter("productId"));
+            String productName = request.getParameter("productName");
+            String productDescription = request.getParameter("productDescription");
+            String productImage = request.getParameter("imageUrl");
+            BigDecimal price = new BigDecimal(request.getParameter("productPrice"));
+            Integer categoryId = request.getParameter("categoryId").isEmpty() ? null : Integer.parseInt(request.getParameter("categoryId"));
+            int stockQuantity = Integer.parseInt(request.getParameter("productStock"));
+            String status = request.getParameter("productStatus");
+
+            // Create updated product object
+            Product updatedProduct = new Product(productId, productName, productDescription, productImage, categoryId, price, stockQuantity, status);
+
+            try {
+                productDao.updateProduct(updatedProduct);
+                response.getWriter().write("Product updated successfully");
+            } catch (SQLException e) {
+                response.getWriter().write("Error updating product: " + e.getMessage());
+            }
+        }
+
+        if ("delete".equals(action)) {
+            int productId = Integer.parseInt(request.getParameter("productId"));
+            try {
+                productDao.deleteProduct(productId);
+                response.getWriter().write("Product deleted successfully");
+            } catch (SQLException e) {
+                response.getWriter().write("Error deleting product: " + e.getMessage());
             }
         }
     }

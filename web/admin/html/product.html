@@ -177,16 +177,6 @@
                                         <th>Stock</th>
                                         <th>Status</th>
                                         <th>Actions</th>
-                                        <td>
-                                            <div class="action-buttons">
-                                                <button class="btn btn-sm btn-warning" onclick="editProduct(1)">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger" onclick="deleteProduct(1)">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </div>
-                                        </td>
                                     </tr>
                                 </thead>
 
@@ -252,7 +242,56 @@
                     </div>
                 </div>
             </div>
-
+            
+            <!-- Edit Product Modal -->
+            <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editProductForm">
+                                <input type="hidden" id="editProductId" name="productId">
+                                <div class="form-group">
+                                    <label for="editProductName">Product Name:</label>
+                                    <input type="text" class="form-control" id="editProductName" name="productName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editProductDescription">Product Description:</label>
+                                    <input type="text" class="form-control" id="editProductDescription" name="productDescription" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editImageUrl">Image URL:</label>
+                                    <input type="text" id="editImageUrl" name="imageUrl" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="editProductPrice">Price:</label>
+                                    <input type="number" class="form-control" id="editProductPrice" name="productPrice" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editCategoryId">Category ID:</label>
+                                    <input type="number" class="form-control" id="editCategoryId" name="categoryId" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editProductStock">Stock Quantity:</label>
+                                    <input type="number" class="form-control" id="editProductStock" name="productStock" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="editProductStatus">Status:</label>
+                                    <select class="form-control" id="editProductStatus" name="productStatus" required>
+                                        <option value="in stock">In Stock</option>
+                                        <option value="out of stock">Out of Stock</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Update Product</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
             <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
             <script src="../assets/js/app.min.js"></script>
