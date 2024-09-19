@@ -156,10 +156,17 @@
                 <!--  Header End -->
 
                 <!-- Content Start -->
+                <!-- Content Start -->
                 <div class="container-fluid">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title fw-semibold mb-4">Product List</h5>
+
+                            <!-- Search Form -->
+                            <div class="input-group mb-3">
+                                <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search products...">
+                                <button id="searchButton" class="btn btn-sm btn-primary" type="button">Search</button>
+                            </div>
 
                             <!-- Button to open the Add Product Modal -->
                             <button class="btn btn-primary my-3" onclick="showAddProductModal()">Add Product</button>
@@ -179,123 +186,133 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-
                                 <tbody id="productTableBody"></tbody>
-
                             </table>
 
                             <div id="noDataMessage" style="display: none;">
                                 <p>No products available.</p>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Add Product Modal -->
-            <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addProductModal">Add New Product</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="addProductForm">
-                                <div class="form-group">
-                                    <label for="productName">Product Name:</label>
-                                    <input type="text" class="form-control" id="productName" name="productName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="productDescription">Product Description:</label>
-                                    <input type="text" class="form-control" id="productDescription" name="productDescription"
-                                           required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="imageUrl">Image URL:</label>
-                                    <input type="text" id="imageUrl" name="imageUrl" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="productPrice">Price:</label>
-                                    <input type="number" class="form-control" id="productPrice" name="productPrice" step="0.01"
-                                           required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="categoryId">Category ID:</label>
-                                    <input type="number" class="form-control" id="categoryId" name="categoryId" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="productStock">Stock Quantity:</label>
-                                    <input type="number" class="form-control" id="productStock" name="productStock" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="productStatus">Status:</label>
-                                    <select class="form-control" id="productStatus" name="productStatus" required>
-                                        <option value="in stock">In Stock</option>
-                                        <option value="out of stock">Out of Stock</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Add Product</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Edit Product Modal -->
-            <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="editProductForm">
-                                <input type="hidden" id="editProductId" name="productId">
-                                <div class="form-group">
-                                    <label for="editProductName">Product Name:</label>
-                                    <input type="text" class="form-control" id="editProductName" name="productName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="editProductDescription">Product Description:</label>
-                                    <input type="text" class="form-control" id="editProductDescription" name="productDescription" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="editImageUrl">Image URL:</label>
-                                    <input type="text" id="editImageUrl" name="imageUrl" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="editProductPrice">Price:</label>
-                                    <input type="number" class="form-control" id="editProductPrice" name="productPrice" step="0.01" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="editCategoryId">Category ID:</label>
-                                    <input type="number" class="form-control" id="editCategoryId" name="categoryId" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="editProductStock">Stock Quantity:</label>
-                                    <input type="number" class="form-control" id="editProductStock" name="productStock" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="editProductStatus">Status:</label>
-                                    <select class="form-control" id="editProductStatus" name="productStatus" required>
-                                        <option value="in stock">In Stock</option>
-                                        <option value="out of stock">Out of Stock</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Update Product</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
-            <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-            <script src="../assets/js/app.min.js"></script>
-            <script src="../assets/js/manageproduct.js"></script>
-    </body>
+                            <!-- Pagination Links -->
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-end">
+                                    <li class="page-item"><a class="page-link" href="#" data-page="prev">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" data-page="1">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" data-page="3">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" data-page="next">Next</a></li>
+                                </ul>
+                            </nav>
 
-</html>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Product Modal -->
+                <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addProductModal">Add New Product</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addProductForm">
+                                    <div class="form-group">
+                                        <label for="productName">Product Name:</label>
+                                        <input type="text" class="form-control" id="productName" name="productName" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="productDescription">Product Description:</label>
+                                        <input type="text" class="form-control" id="productDescription" name="productDescription"
+                                               required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="imageUrl">Image URL:</label>
+                                        <input type="text" id="imageUrl" name="imageUrl" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="productPrice">Price:</label>
+                                        <input type="number" class="form-control" id="productPrice" name="productPrice" step="0.01"
+                                               required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="categoryId">Category ID:</label>
+                                        <input type="number" class="form-control" id="categoryId" name="categoryId" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="productStock">Stock Quantity:</label>
+                                        <input type="number" class="form-control" id="productStock" name="productStock" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="productStatus">Status:</label>
+                                        <select class="form-control" id="productStatus" name="productStatus" required>
+                                            <option value="in stock">In Stock</option>
+                                            <option value="out of stock">Out of Stock</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Add Product</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Product Modal -->
+                <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editProductForm">
+                                    <input type="hidden" id="editProductId" name="productId">
+                                    <div class="form-group">
+                                        <label for="editProductName">Product Name:</label>
+                                        <input type="text" class="form-control" id="editProductName" name="productName" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editProductDescription">Product Description:</label>
+                                        <input type="text" class="form-control" id="editProductDescription" name="productDescription" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editImageUrl">Image URL:</label>
+                                        <input type="text" id="editImageUrl" name="imageUrl" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editProductPrice">Price:</label>
+                                        <input type="number" class="form-control" id="editProductPrice" name="productPrice" step="0.01" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editCategoryId">Category ID:</label>
+                                        <input type="number" class="form-control" id="editCategoryId" name="categoryId" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editProductStock">Stock Quantity:</label>
+                                        <input type="number" class="form-control" id="editProductStock" name="productStock" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editProductStatus">Status:</label>
+                                        <select class="form-control" id="editProductStatus" name="productStatus" required>
+                                            <option value="in stock">In Stock</option>
+                                            <option value="out of stock">Out of Stock</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Update Product</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+                <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+                <script src="../assets/js/app.min.js"></script>
+                <script src="../assets/js/manageproduct.js"></script>
+                </body>
+
+                </html>

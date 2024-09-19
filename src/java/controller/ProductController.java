@@ -31,8 +31,21 @@ public class ProductController extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("viewList".equals(action)) {
+            String search = request.getParameter("search");
+            if (search == null) {
+                search = "";
+            }
+            int page = 1;
             try {
-                List<Product> productList = productDao.getAllProducts();
+                page = Integer.parseInt(request.getParameter("page"));
+            } catch (NumberFormatException e) {
+                page = 1;
+            }
+
+            try {
+                List<Product> productList = productDao.getProducts(search, page);
+                int totalProducts = productDao.countProducts(search);
+                int totalPages = (int) Math.ceil((double) totalProducts / 5);
 
                 StringBuilder htmlResponse = new StringBuilder();
                 htmlResponse.append("<table>");
@@ -49,6 +62,13 @@ public class ProductController extends HttpServlet {
                     htmlResponse.append("</tr>");
                 }
                 htmlResponse.append("</table>");
+
+                // Add pagination links
+                htmlResponse.append("<div class='pagination'>");
+                for (int i = 1; i <= totalPages; i++) {
+                    htmlResponse.append(String.format("<a href='#' class='page-link' data-page='%d'>%d</a> ", i, i));
+                }
+                htmlResponse.append("</div>");
 
                 response.setContentType("text/html");
                 response.getWriter().write(htmlResponse.toString());

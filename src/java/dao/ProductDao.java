@@ -34,18 +34,18 @@ public class ProductDao {
             }
             statement.setBigDecimal(5, product.getPrice());
             statement.setInt(6, product.getStockQuantity());
-            statement.setTimestamp(7, new Timestamp(System.currentTimeMillis()));  // CreatedDate
-            statement.setTimestamp(8, new Timestamp(System.currentTimeMillis()));  // UpdatedDate
+            statement.setTimestamp(7, new Timestamp(System.currentTimeMillis())); 
+            statement.setTimestamp(8, new Timestamp(System.currentTimeMillis())); 
             statement.setString(9, product.getStatus());
 
             statement.executeUpdate();
         }
     }
 
-    // Fetch all products not deleted
+    // Fetch all products from the database
     public List<Product> getAllProducts() throws SQLException {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM Product WHERE isDeleted = 0";
+        String sql = "SELECT * FROM Product";
         try (Connection connection = dbContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 products.add(extractProductFromResultSet(resultSet));
@@ -97,7 +97,7 @@ public class ProductDao {
     }
 
     public void deleteProduct(int productId) throws SQLException {
-        String sql = "UPDATE Product SET isDeleted = TRUE WHERE ProductID = ?";
+        String sql = "DELETE FROM Product WHERE ProductID = ?";
         try (Connection connection = dbContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, productId);
             statement.executeUpdate();
@@ -109,23 +109,49 @@ public class ProductDao {
         String productName = resultSet.getString("ProductName");
         String productDetails = resultSet.getString("ProductDetails");
         String productImage = resultSet.getString("ProductImage");
-        Integer categoryId = resultSet.getInt("CategoryID");
+        Integer categoryID = resultSet.getInt("CategoryID");
         if (resultSet.wasNull()) {
-            categoryId = null;
+            categoryID = null;
         }
         BigDecimal price = resultSet.getBigDecimal("Price");
         int stockQuantity = resultSet.getInt("StockQuantity");
         Timestamp createdDate = resultSet.getTimestamp("CreatedDate");
         Timestamp updatedDate = resultSet.getTimestamp("UpdatedDate");
         String status = resultSet.getString("Status");
-        boolean isDeleted = resultSet.getBoolean("isDeleted");
 
-        Product product = new Product(productId, productName, productDetails, productImage, categoryId, price, stockQuantity, status);
+        Product product = new Product(productId, productName, productDetails, productImage, categoryID, price, stockQuantity, status);
         product.setCreatedDate(createdDate);
         product.setUpdatedDate(updatedDate);
-        // Assuming you have a setter for isDeleted in your Product model if you want to track this in the object
-        // product.setIsDeleted(isDeleted);
 
         return product;
+    }
+
+    public List<Product> getProducts(String search, int page) throws SQLException {
+        List<Product> products = new ArrayList<>();
+        int offset = (page - 1) * 5;
+        String sql = "SELECT * FROM Product WHERE LOWER(ProductName) LIKE ? ORDER BY ProductID OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY";
+        try (Connection connection = dbContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, "%" + search.toLowerCase() + "%");
+            statement.setInt(2, offset);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    products.add(extractProductFromResultSet(resultSet));
+                }
+            }
+        }
+        return products;
+    }
+
+    public int countProducts(String search) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM Product WHERE LOWER(ProductName) LIKE ?";
+        try (Connection connection = dbContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, "%" + search.toLowerCase() + "%");
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                }
+            }
+        }
+        return 0;
     }
 }

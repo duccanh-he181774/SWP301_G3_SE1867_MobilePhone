@@ -5,16 +5,36 @@
 
 $(document).ready(function () {
     loadProducts();
+
+    $('#searchButton').on('click', function () {
+        var searchQuery = $('#searchInput').val();
+        loadProducts(searchQuery, 1);
+    });
+
+    $(document).on('click', '.page-link', function (e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        var searchQuery = $('#searchInput').val();
+
+        // Next, Previous
+        var currentPage = parseInt($('.pagination .active').text()) || 1;
+        if (page === 'prev') {
+            page = currentPage > 1 ? currentPage - 1 : 1;
+        } else if (page === 'next') {
+            page = currentPage + 1;
+        } else {
+            page = parseInt(page);
+        }
+        loadProducts(searchQuery, page);
+    });
 });
 
-// Function to load products
-// Function to load products
-function loadProducts() {
+// Load all product
+function loadProducts(search = '', page = 1) {
     $.ajax({
-        url: '/MobilePhone/manage-product?action=viewList',
+        url: `/MobilePhone/manage-product?action=viewList&search=${encodeURIComponent(search)}&page=${page}`,
         type: 'GET',
         success: function (response) {
-            console.log("Response:", response); // Log response to debug
             var parser = new DOMParser();
             var doc = parser.parseFromString(response, 'text/html');
             var rows = doc.querySelectorAll('tr');
@@ -37,7 +57,6 @@ function loadProducts() {
                 tableBody.append(createProductRow(product));
             });
 
-            // Add event listeners to edit and delete buttons
             $('.edit-product').on('click', function () {
                 var productId = $(this).closest('tr').data('product-id');
                 editProduct(productId);
@@ -52,17 +71,44 @@ function loadProducts() {
             $('#productTable').show();
         },
         error: function (xhr, status, error) {
-            console.error("Error loading products:", error); // Log error to debug
+            console.error("Error loading products:", error);
             $('#noDataMessage').show();
             $('#productTable').hide();
         }
     });
 }
 
+function createProductRow(product) {
+    const price = parseFloat(product.price);
+    return `
+        <tr data-product-id="${product.id}">
+            <td class="id-column">${product.id}</td>
+            <td>${product.name}</td>
+            <td>${product.description}</td>
+            <td><img src="${product.image}" alt="${product.name}" width="50"></td>
+            <td>${price.toFixed(2)}</td>
+            <td>${product.categoryId}</td>
+            <td>${product.stock}</td>
+            <td>${product.status}</td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn btn-sm btn-warning edit-product">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger delete-product">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `;
+}
+
 function showAddProductModal() {
     $('#addProductModal').modal('show');
 }
 
+// Add new product
 $('#addProductForm').on('submit', function (event) {
     event.preventDefault();
 
@@ -75,6 +121,7 @@ $('#addProductForm').on('submit', function (event) {
         success: function (response) {
             if (response.includes("Error")) {
                 alert(response);
+                $('#addProductModal').modal('hide');
             } else {
                 alert(response);
                 loadProducts();
@@ -86,7 +133,7 @@ $('#addProductForm').on('submit', function (event) {
     });
 });
 
-// Edit Product
+// Edit product
 function editProduct(productId) {
     $.ajax({
         url: '/MobilePhone/manage-product?action=getProduct&productId=' + productId,
@@ -109,6 +156,7 @@ function editProduct(productId) {
     });
 }
 
+// Update
 $('#editProductForm').on('submit', function (event) {
     event.preventDefault();
     var formData = $(this).serialize();
@@ -127,7 +175,7 @@ $('#editProductForm').on('submit', function (event) {
     });
 });
 
-// Delete Product
+// Delete product
 function deleteProduct(productId) {
     if (confirm('Are you sure you want to delete this product?')) {
         $.ajax({
@@ -144,32 +192,5 @@ function deleteProduct(productId) {
     }
 }
 
-function createProductRow(product) {
-    // Ensure price is parsed as a float
-    const price = parseFloat(product.price);
-
-    return `
-        <tr data-product-id="${product.id}">
-            <td class="id-column">${product.id}</td>
-            <td>${product.name}</td>
-            <td>${product.description}</td>
-            <td><img src="${product.image}" alt="${product.name}" width="50"></td>
-            <td>${price.toFixed(2)}</td> <!-- Use toFixed() on a parsed float -->
-            <td>${product.categoryId}</td>
-            <td>${product.stock}</td>
-            <td>${product.status}</td>
-            <td>
-                <div class="action-buttons">
-                    <button class="btn btn-sm btn-warning edit-product">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger delete-product">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </td>
-        </tr>
-    `;
-}
 
 
