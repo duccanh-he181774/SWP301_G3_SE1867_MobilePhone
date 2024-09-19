@@ -15,9 +15,6 @@ function loadProducts() {
         success: function (response) {
             $('#productTableBody').html(response);
             $('#noDataMessage').hide();
-        },
-        error: function () {
-            $('#noDataMessage').show();
         }
     });
 }
@@ -36,10 +33,10 @@ $('#addProductForm').on('submit', function (event) {
         data: formData,
         success: function (response) {
             if (response.includes("Error")) {
-                alert(response); 
+                alert(response);
             } else {
                 alert(response);
-                loadProducts(); 
+                loadProducts();
             }
         },
         error: function () {
@@ -49,8 +46,8 @@ $('#addProductForm').on('submit', function (event) {
 });
 
 
-// Show the Edit Product Modal
-function showEditProductModal(productId) {
+// Edit Product Function
+function editProduct(productId) {
     $.ajax({
         url: '/MobilePhone/manage-product?action=edit&productId=' + productId,
         type: 'GET',
@@ -59,42 +56,28 @@ function showEditProductModal(productId) {
             $('#editProductModal').modal('show');
         },
         error: function () {
-            alert('Error loading product details');
+            alert('Error loading product details.');
         }
     });
 }
 
-// Submit the Edit Product Form via AJAX
-$('#editProductForm').on('submit', function (event) {
-    event.preventDefault();
-    var formData = $(this).serialize();
-
-    $.ajax({
-        url: '/MobilePhone/manage-product?action=edit',
-        type: 'POST',
-        data: formData,
-        success: function () {
-            $('#editProductModal').modal('hide');
-            loadProducts();
-        },
-        error: function () {
-            alert('Error updating product');
-        }
-    });
-});
-
-// Delete Product
+// Delete Product Function
 function deleteProduct(productId) {
     if (confirm('Are you sure you want to delete this product?')) {
         $.ajax({
             url: '/MobilePhone/manage-product?action=delete&productId=' + productId,
             type: 'POST',
             success: function () {
+                alert('Product deleted successfully.');
                 loadProducts();
             },
             error: function () {
-                alert('Error deleting product');
+                alert('Error deleting product.');
             }
         });
     }
 }
+
+
+
+
