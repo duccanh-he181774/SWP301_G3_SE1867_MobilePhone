@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class DBContext {
 
-    private String url = "jdbc:sqlserver://localhost:1433;databaseName=MobilePhone;encrypt=false;trustServerCertificate=true";
+    private String url = "jdbc:sqlserver://localhost:1433;databaseName=MobileShop;encrypt=false;trustServerCertificate=true";
     private String username = "sa";
-    private String password = "1";
+    private String password = "123";
 
     public Connection getConnection() throws SQLException {
         try {

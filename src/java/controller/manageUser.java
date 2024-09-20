@@ -127,44 +127,49 @@ public class manageUser extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String userIdStr = request.getParameter("userID");
-        String userName = request.getParameter("userName");
-        String email = request.getParameter("email");
-        String registrationDateStr = request.getParameter("registrationDate");
-        String address = request.getParameter("address");
-        String roleName = request.getParameter("roleName");
-
+        String action = request.getParameter("action");
+        String userIdStr = request.getParameter("id"); // Thay đổi từ "userID" thành "id"
         response.setContentType("application/json;charset=UTF-8");
+
         try (PrintWriter out = response.getWriter()) {
-            if (userIdStr != null && userName != null && email != null && registrationDateStr != null && address != null && roleName != null) {
-                int userId = Integer.parseInt(userIdStr);
+            if ("edit".equals(action) && userIdStr != null) {
+                // Đọc dữ liệu JSON từ body
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = request.getReader().readLine()) != null) {
+                    sb.append(line);
+                }
 
-                // Sử dụng SimpleDateFormat để phân tích chuỗi ngày tháng
-                SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy, h:mm:ss a");
-                Date date = sdf.parse(registrationDateStr);
-                Timestamp registrationDate = new Timestamp(date.getTime());
+                // Chuyển đổi JSON thành đối tượng UserWithRole
+                Gson gson = new Gson();
+                UserWithRole user = gson.fromJson(sb.toString(), UserWithRole.class);
+                user.setUserID(Integer.parseInt(userIdStr));  // Gán ID từ request
 
-                UserWithRole user = new UserWithRole(userId, userName, email, registrationDate, address, roleName);
-                boolean success = userDAO.updateUser(user);
-                if (success) {
+                // Kiểm tra các trường cần thiết
+                if (user.getUserName() == null || user.getEmail() == null || user.getAddress() == null) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing required fields.");
+                    return;
+                }
+
+                // Cập nhật người dùng trong cơ sở dữ liệu
+                boolean updated = userDAO.updateUser(user);
+                if (updated) {
                     out.print("{\"status\":\"success\"}");
                 } else {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found.");
                 }
             } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters.");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action or missing userId.");
             }
             out.flush();
-        } catch (ParseException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid date format.");
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid user ID format.");
         } catch (Exception e) {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the request.");
         }
+        
     }
 
     /**
