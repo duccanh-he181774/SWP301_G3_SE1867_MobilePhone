@@ -79,14 +79,22 @@ function loadProducts(search = '', page = 1) {
 }
 
 function createProductRow(product) {
-    const price = parseFloat(product.price);
+    const priceInDong = product.price * 1000000;
+    const formatter = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+        minimumFractionDigits: 0
+    });
+    let priceFormatted = formatter.format(product.price);
+    let price = priceFormatted.replace('₫', 'đ');
+
     return `
         <tr data-product-id="${product.id}">
             <td class="id-column">${product.id}</td>
             <td>${product.name}</td>
             <td>${product.description}</td>
             <td><img src="${product.image}" alt="${product.name}" width="50"></td>
-            <td>${price.toFixed(2)}</td>
+            <td>${price}</td>
             <td>${product.categoryId}</td>
             <td>${product.stock}</td>
             <td>${product.status}</td>

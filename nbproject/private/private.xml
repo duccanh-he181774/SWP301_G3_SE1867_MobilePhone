@@ -5,6 +5,9 @@
         <group>
             <file>file:/D:/SWP301_G3_SE1867_MobilePhone/web/admin/assets/js/manageproduct.js</file>
             <file>file:/D:/SWP301_G3_SE1867_MobilePhone/web/admin/html/product.html</file>
+            <file>file:/D:/SWP301_G3_SE1867_MobilePhone/src/java/controller/ProductController.java</file>
+            <file>file:/D:/SWP301_G3_SE1867_MobilePhone/src/java/dao/ProductDao.java</file>
+            <file>file:/D:/SWP301_G3_SE1867_MobilePhone/src/java/model/Product.java</file>
         </group>
     </open-files>
 </project-private>
