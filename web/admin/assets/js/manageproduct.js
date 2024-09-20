@@ -133,6 +133,8 @@ $('#addProductForm').on('submit', function (event) {
             } else {
                 alert(response);
                 loadProducts();
+                $('#addProductModal').modal('hide');
+                $('#addProductModal')[0].reset();
             }
         },
         error: function () {
