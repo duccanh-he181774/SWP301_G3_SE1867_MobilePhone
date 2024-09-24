@@ -1,5 +1,6 @@
-package dal;
+package dao;
 
+import dal.DBContext;
 import model.ProductCategory;
 import java.sql.*;
 import java.util.ArrayList;

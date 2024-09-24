@@ -4,8 +4,8 @@
  */
 package controller;
 
-import dal.CategoryDAO;
-import dal.ProductDAO1;
+import dao.CategoryDAO;
+import dao.ProductDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

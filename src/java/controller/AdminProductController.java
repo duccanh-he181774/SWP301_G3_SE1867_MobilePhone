@@ -1,8 +1,8 @@
 package controller;
 
 import com.google.gson.Gson;
-import dao.ProductDao;
-import model.Product;
+import dao.AdminProductDao;
+import model.AdminProduct;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,9 +21,9 @@ import java.util.logging.Logger;
  * @author ADMIN
  */
 @WebServlet("/MobilePhone/manage-product")
-public class ProductController extends HttpServlet {
+public class AdminProductController extends HttpServlet {
 
-    private ProductDao productDao = new ProductDao();
+    private AdminProductDao productDao = new AdminProductDao();
     private Gson gson = new Gson();
 
     @Override
@@ -43,13 +43,13 @@ public class ProductController extends HttpServlet {
             }
 
             try {
-                List<Product> productList = productDao.getProducts(search, page);
+                List<AdminProduct> productList = productDao.getProducts(search, page);
                 int totalProducts = productDao.countProducts(search);
                 int totalPages = (int) Math.ceil((double) totalProducts / 5);
 
                 StringBuilder htmlResponse = new StringBuilder();
                 htmlResponse.append("<table>");
-                for (Product product : productList) {
+                for (AdminProduct product : productList) {
                     htmlResponse.append("<tr>");
                     htmlResponse.append("<td>").append(product.getProductId()).append("</td>");
                     htmlResponse.append("<td>").append(product.getProductName()).append("</td>");
@@ -76,14 +76,14 @@ public class ProductController extends HttpServlet {
             } catch (SQLException e) {
                 response.getWriter().println("Error fetching product list: " + e.getMessage());
             } catch (Exception ex) {
-                Logger.getLogger(ProductController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AdminProductController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
         if ("getProduct".equals(action)) {
             int productId = Integer.parseInt(request.getParameter("productId"));
             try {
-                Product product = productDao.getProductById(productId);
+                AdminProduct product = productDao.getProductById(productId);
                 String json = gson.toJson(product);
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
@@ -110,7 +110,7 @@ public class ProductController extends HttpServlet {
             String status = request.getParameter("productStatus");
 
             // Create new product object
-            Product newProduct = new Product(productName, productDescription, productImage, categoryId, price, stockQuantity, status);
+            AdminProduct newProduct = new AdminProduct(productName, productDescription, productImage, categoryId, price, stockQuantity, status);
 
             try {
                 productDao.addProduct(newProduct);
@@ -118,7 +118,7 @@ public class ProductController extends HttpServlet {
             } catch (SQLException e) {
                 response.getWriter().println("Error adding product: " + e.getMessage());
             } catch (Exception ex) {
-                Logger.getLogger(ProductController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AdminProductController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -134,7 +134,7 @@ public class ProductController extends HttpServlet {
             String status = request.getParameter("productStatus");
 
             // Create updated product object
-            Product updatedProduct = new Product(productId, productName, productDescription, productImage, categoryId, price, stockQuantity, status);
+            AdminProduct updatedProduct = new AdminProduct(productId, productName, productDescription, productImage, categoryId, price, stockQuantity, status);
 
             try {
                 productDao.updateProduct(updatedProduct);

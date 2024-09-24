@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBContext {
+    protected Connection connection;
 
     private String url = "jdbc:sqlserver://localhost:1433;databaseName=MobileShop;encrypt=false;trustServerCertificate=true";
     private String username = "sa";

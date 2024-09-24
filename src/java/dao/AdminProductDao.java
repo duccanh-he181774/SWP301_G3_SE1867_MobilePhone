@@ -4,7 +4,7 @@
  */
 package dao;
 
-import model.Product;
+import model.AdminProduct;
 import dal.DBContext;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -15,12 +15,12 @@ import java.util.List;
  *
  * @author ADMIN
  */
-public class ProductDao {
+public class AdminProductDao {
 
     private DBContext dbContext = new DBContext();
 
     // Add product to the database
-    public void addProduct(Product product) throws SQLException {
+    public void addProduct(AdminProduct product) throws SQLException {
         String sql = "INSERT INTO Product (ProductName, ProductDetails, ProductImage, CategoryID, Price, StockQuantity, CreatedDate, UpdatedDate, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = dbContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -43,8 +43,8 @@ public class ProductDao {
     }
 
     // Fetch all products from the database
-    public List<Product> getAllProducts() throws SQLException {
-        List<Product> products = new ArrayList<>();
+    public List<AdminProduct> getAllProducts() throws SQLException {
+        List<AdminProduct> products = new ArrayList<>();
         String sql = "SELECT * FROM Product";
         try (Connection connection = dbContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
@@ -54,13 +54,13 @@ public class ProductDao {
         return products;
     }
 
-    public Product getProductById(int productId) throws SQLException {
+    public AdminProduct getProductById(int productId) throws SQLException {
         String sql = "SELECT * FROM Product WHERE ProductID = ?";
         try (Connection connection = dbContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, productId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    return new Product(
+                    return new AdminProduct(
                             resultSet.getInt("ProductID"),
                             resultSet.getString("ProductName"),
                             resultSet.getString("ProductDetails"),
@@ -76,7 +76,7 @@ public class ProductDao {
         return null;
     }
 
-    public void updateProduct(Product product) throws SQLException {
+    public void updateProduct(AdminProduct product) throws SQLException {
         String sql = "UPDATE Product SET ProductName = ?, ProductDetails = ?, ProductImage = ?, CategoryID = ?, Price = ?, StockQuantity = ?, UpdatedDate = ?, Status = ? WHERE ProductID = ?";
         try (Connection connection = dbContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, product.getProductName());
@@ -104,7 +104,7 @@ public class ProductDao {
         }
     }
 
-    private Product extractProductFromResultSet(ResultSet resultSet) throws SQLException {
+    private AdminProduct extractProductFromResultSet(ResultSet resultSet) throws SQLException {
         int productId = resultSet.getInt("ProductID");
         String productName = resultSet.getString("ProductName");
         String productDetails = resultSet.getString("ProductDetails");
@@ -119,15 +119,15 @@ public class ProductDao {
         Timestamp updatedDate = resultSet.getTimestamp("UpdatedDate");
         String status = resultSet.getString("Status");
 
-        Product product = new Product(productId, productName, productDetails, productImage, categoryID, price, stockQuantity, status);
+        AdminProduct product = new AdminProduct(productId, productName, productDetails, productImage, categoryID, price, stockQuantity, status);
         product.setCreatedDate(createdDate);
         product.setUpdatedDate(updatedDate);
 
         return product;
     }
 
-    public List<Product> getProducts(String search, int page) throws SQLException {
-        List<Product> products = new ArrayList<>();
+    public List<AdminProduct> getProducts(String search, int page) throws SQLException {
+        List<AdminProduct> products = new ArrayList<>();
         int offset = (page - 1) * 5;
         String sql = "SELECT * FROM Product WHERE LOWER(ProductName) LIKE ? ORDER BY ProductID OFFSET ? ROWS FETCH NEXT 5 ROWS ONLY";
         try (Connection connection = dbContext.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
