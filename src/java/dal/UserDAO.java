@@ -19,7 +19,7 @@ public class UserDAO extends DBContext {
      */
     public User authenticateUser(String email, String password) {
         try {
-            String sql = "SELECT * FROM Users WHERE email = ? or UserName = ? AND passwordHash = ?";
+            String sql = "SELECT * FROM Users WHERE (email = ? or UserName = ?) AND passwordHash = ?";
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, email);
             stmt.setString(2, email);
