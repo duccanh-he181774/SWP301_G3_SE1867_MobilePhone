@@ -16055,7 +16055,7 @@ ul{
     margin: 10% auto; /* 10% from the top and centered */
     padding: 15px;
     border: 1px solid #888;
-    width: 40%; /* Smaller width */
+    width: 100%; /* Smaller width */
     max-width: 500px; /* Maximum width */
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
