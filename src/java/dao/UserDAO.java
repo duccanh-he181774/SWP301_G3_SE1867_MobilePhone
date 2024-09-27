@@ -30,23 +30,27 @@ public class UserDAO extends  DBContext{
     private DBContext dbContext = new DBContext();
 
     public User authenticateUser(String email, String password) {
-        try {
-            String sql = "SELECT * FROM Users WHERE (email = ? or UserName = ?) AND passwordHash = ?";
-            PreparedStatement stmt = connection.prepareStatement(sql);
+        String sql = "SELECT * FROM Users WHERE (email = ? OR UserName = ?) AND passwordHash = ?";
+        try (Connection connection = dbContext.getConnection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            // Mã hóa mật khẩu trước khi so sánh với passwordHash trong DB
+            String hashedPassword = hashPassword(password); // Giả sử bạn có một hàm hashPassword để băm mật khẩu
+
             stmt.setString(1, email);
             stmt.setString(2, email);
-            stmt.setString(3, password);
-            ResultSet rs = stmt.executeQuery();
+            stmt.setString(3, hashedPassword);
 
-            if (rs.next()) {
-                int userID = rs.getInt("userID");
-                String userName = rs.getString("userName");
-                String passwordHash = rs.getString("passwordHash");
-                Date registrationDate = rs.getDate("registrationDate");
-                String address = rs.getString("address");
-                String paymentInfo = rs.getString("paymentInfo");
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    int userID = rs.getInt("userID");
+                    String userName = rs.getString("userName");
+                    String passwordHash = rs.getString("passwordHash");
+                    Date registrationDate = rs.getDate("registrationDate");
+                    String address = rs.getString("address");
+                    String paymentInfo = rs.getString("paymentInfo");
 
-                return new User(userID, userName, email, passwordHash, registrationDate, address, paymentInfo);
+                    return new User(userID, userName, email, passwordHash, registrationDate, address, paymentInfo);
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
