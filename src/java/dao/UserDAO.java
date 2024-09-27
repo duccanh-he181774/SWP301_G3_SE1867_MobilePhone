@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.User;
 
-public class UserDAO {
+public class UserDAO extends  DBContext{
 
     private DBContext dbContext = new DBContext();
 
